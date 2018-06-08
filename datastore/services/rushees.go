@@ -6,6 +6,7 @@ import (
 )
 
 type RusheeService interface {
+	Create(rushee *models.Rushee) error
 	GetAll(id uint) ([]*models.Rushee, error)
 	Get(id uint) (*models.Rushee, error)
 	Update(rushee *models.Rushee) error
@@ -20,7 +21,7 @@ func NewRusheeService(db *gorm.DB) *GormRusheeService {
 	return &GormRusheeService{db: db}
 }
 
-func (service *GormRusheeService) GetRushee(id uint) (*models.Rushee, error) {
+func (service *GormRusheeService) Get(id uint) (*models.Rushee, error) {
 	var rushee models.Rushee
 	err := service.db.First(&rushee, id).Error
 	if err != nil {
@@ -29,7 +30,7 @@ func (service *GormRusheeService) GetRushee(id uint) (*models.Rushee, error) {
 	return &rushee, nil
 }
 
-func (service *GormRusheeService) GetAllRushees() ([]*models.Rushee, error) {
+func (service *GormRusheeService) GetAll() ([]*models.Rushee, error) {
 	var rushees []*models.Rushee
 	err := service.db.Find(&rushees).Error
 	if err != nil {
@@ -38,10 +39,14 @@ func (service *GormRusheeService) GetAllRushees() ([]*models.Rushee, error) {
 	return rushees, nil
 }
 
+func (service *GormRusheeService) Create(rushee *models.Rushee) error {
+	return service.db.Create(rushee).Error
+}
+
 func (service *GormRusheeService) Update(rushee *models.Rushee) error {
-	return nil
+	return service.db.Save(rushee).Error
 }
 
 func (service *GormRusheeService) Delete(id uint) error {
-	return nil
+	return service.db.Delete(&models.Rushee{ID: id}).Error
 }

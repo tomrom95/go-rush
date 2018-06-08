@@ -14,7 +14,7 @@ func GetRushees(context *Context, w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	rusheeService := services.NewRusheeService(context.DB)
-	rushees, err := rusheeService.GetAllRushees()
+	rushees, err := rusheeService.GetAll()
 	if err != nil {
 		panic(err)
 	}
